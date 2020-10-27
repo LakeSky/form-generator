@@ -39,7 +39,7 @@
           <el-col :xs="0" :md="8" :lg="8">预览</el-col><!--占位置-->
           <el-col :md="8" :lg="8" :xs="24" class="right-preview">
             <div class="action-bar" :style="{'text-align': 'left'}">
-              <span class="bar-btn" @click="runCode">
+              <span class="bar-btn" @click="dialogFormVisible = true">
                 <i class="el-icon-refresh"/>
                 发布
               </span>
@@ -78,6 +78,11 @@
       :origin-resource="resources"
       @save="setResource"
     />
+    <login-dialog
+            :visible.sync="dialogFormVisible"
+            :origin-resource="resources"
+            @save="setResource"
+    />
   </div>
 </template>
 <script>
@@ -91,6 +96,7 @@ import { makeUpJs } from '@/components/generator/js'
 import { makeUpCss } from '@/components/generator/css'
 import { exportDefault, beautifierConf, titleCase } from '@/utils/index'
 import ResourceDialog from './ResourceDialog'
+import LoginDialog from './LoginDialog'
 import loadMonaco from '@/utils/loadMonaco'
 import loadBeautifier from '@/utils/loadBeautifier'
 
@@ -108,7 +114,7 @@ let beautifier
 let monaco
 
 export default {
-  components: { ResourceDialog },
+  components: { ResourceDialog, LoginDialog },
   props: ['formData', 'generateConf'],
   data() {
     return {
@@ -123,7 +129,8 @@ export default {
       resourceVisible: false,
       scripts: [],
       links: [],
-      monaco: null
+      monaco: null,
+      dialogFormVisible: false
     }
   },
   computed: {
