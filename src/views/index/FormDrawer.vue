@@ -36,9 +36,14 @@
             <div v-show="activeTab==='js'" id="editorJs" class="tab-editor" />
             <div v-show="activeTab==='css'" id="editorCss" class="tab-editor" />
           </el-col>
-          <el-col :md="24" :lg="12" class="right-preview">
+          <el-col :xs="0" :md="8" :lg="8">预览</el-col><!--占位置-->
+          <el-col :md="8" :lg="8" :xs="24" class="right-preview">
             <div class="action-bar" :style="{'text-align': 'left'}">
               <span class="bar-btn" @click="runCode">
+                <i class="el-icon-refresh"/>
+                发布
+              </span>
+              <!--<span class="bar-btn" @click="runCode">
                 <i class="el-icon-refresh" />
                 刷新
               </span>
@@ -49,7 +54,7 @@
               <span ref="copyBtn" class="bar-btn copy-btn">
                 <i class="el-icon-document-copy" />
                 复制代码
-              </span>
+              </span>-->
               <span class="bar-btn delete-btn" @click="$emit('update:visible', false)">
                 <i class="el-icon-circle-close" />
                 关闭
@@ -301,6 +306,7 @@ export default {
   font-size: 14px;
 }
 .left-editor {
+  display: none;
   position: relative;
   height: 100%;
   background: #1e1e1e;
