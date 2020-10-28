@@ -37,7 +37,8 @@ module.exports = {
     }
   },
   devServer: {
-    overlay: false
+    overlay: false,
+    port: 9099
   },
   productionSourceMap: false,
   configureWebpack: {

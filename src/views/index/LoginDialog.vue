@@ -18,9 +18,9 @@
   </div>
 </template>
 <script>
-import { deepClone } from '@/utils/index'
+  import {deepClone} from '@/utils/index'
 
-export default {
+  export default {
   components: {},
   inheritAttrs: false,
   props: ['originFormData'],
@@ -33,12 +33,7 @@ export default {
       form: {
         username: '',
         password: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        rePassword: ''
       },
       formLabelWidth: '120px'
     }
@@ -63,13 +58,39 @@ export default {
       console.log(JSON.stringify(this.$attrs.originResource));
       //1.登录成功，并且要在后台建立账号和对应的类型。所有的数据。
       //2.数据要传给后台建立
-      this.$alert('一段网址', '分享网址', {
-        confirmButtonText: '确定',
-        callback: action => {
-          // location.href="https://www.baidu.com/";
+      this.$axios.post("http://localhost:8080/api/auth/register", {//发送请求 跳转页面
+        email: this.form.username,
+        password: this.form.password,
+        rePassword: this.form.rePassword
+      }).then((response) => {
+        var data = response.data;
+        if (data.isSuccess) {
+          this.$axios.post("http://localhost:8080/api/class/create", {//发送请求 跳转页面
+            formJson: JSON.stringify(this.$attrs.originResource)
+          }).then((response) => {
+            var data = response.data;
+            if (data.isSuccess) {
+              this.$alert('一段网址', '分享网址', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  // location.href="https://www.baidu.com/";
+                }
+              });
+            } else {
+
+            }
+            console.log(response.data)
+          }).catch((response) => {
+            console.log("错误" + response)
+          });
+          this.$emit('update:visible', false)
+        }else{
+          
         }
+        console.log(response.data)
+      }).catch((response) => {
+        console.log("错误" + response)
       });
-      this.$emit('update:visible', false)
     }
   }
 }
