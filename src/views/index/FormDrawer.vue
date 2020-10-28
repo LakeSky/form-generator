@@ -80,7 +80,7 @@
     />
     <login-dialog
             :visible.sync="dialogFormVisible"
-            :origin-resource="resources"
+            :originResource="myFormData"
             @save="setResource"
     />
   </div>
@@ -136,6 +136,9 @@ export default {
   computed: {
     resources() {
       return this.scripts.concat(this.links)
+    },
+    myFormData() {
+      return this.formData
     }
   },
   watch: {},

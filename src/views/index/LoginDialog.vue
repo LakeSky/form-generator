@@ -23,10 +23,11 @@ import { deepClone } from '@/utils/index'
 export default {
   components: {},
   inheritAttrs: false,
-  props: ['originResource'],
+  props: ['originFormData'],
   data() {
     return {
       resources: null,
+      formData: null,
       dialogTableVisible: false,
       dialogFormVisible: false,
       form: {
@@ -48,7 +49,7 @@ export default {
   mounted() {},
   methods: {
     onOpen() {
-      this.resources = this.originResource.length ? deepClone(this.originResource) : ['']
+      
     },
     onClose() {
       this.$emit('update:visible', false)
@@ -58,11 +59,14 @@ export default {
       this.$emit('update:visible', false)
     },
     handelConfirm() {
+      console.log(this.$attrs.originResource);
+      console.log(JSON.stringify(this.$attrs.originResource));
       //1.登录成功，并且要在后台建立账号和对应的类型。所有的数据。
+      //2.数据要传给后台建立
       this.$alert('一段网址', '分享网址', {
         confirmButtonText: '确定',
         callback: action => {
-          location.href="https://www.baidu.com/";
+          // location.href="https://www.baidu.com/";
         }
       });
       this.$emit('update:visible', false)
