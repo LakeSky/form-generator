@@ -1,13 +1,18 @@
 <template>
   <div>
-    <el-dialog v-bind="$attrs" @close="onClose" title="登录">
+    <el-dialog v-bind="$attrs" @close="onClose" title="">
       <el-form :model="form">
+        <el-form-item label="表单名称" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="form.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
-          <!--show-password-->
           <el-input v-model="form.password" show-password autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="重复密码" :label-width="formLabelWidth">
+          <el-input v-model="form.rePassword" show-password autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -31,6 +36,7 @@
       dialogTableVisible: false,
       dialogFormVisible: false,
       form: {
+        name: '',
         username: '',
         password: '',
         rePassword: ''
@@ -55,29 +61,33 @@
     },
     handelConfirm() {
       console.log(this.$attrs.originResource);
+      this.$attrs.originResource.name = this.form.name;
       console.log(JSON.stringify(this.$attrs.originResource));
       //1.登录成功，并且要在后台建立账号和对应的类型。所有的数据。
       //2.数据要传给后台建立
-      this.$axios.post("http://localhost:8080/api/auth/register", {//发送请求 跳转页面
+      var serverUrl = "http://localhost:8080/";
+      this.$axios.post(serverUrl + "api/auth/register", {//发送请求 跳转页面
         email: this.form.username,
         password: this.form.password,
         rePassword: this.form.rePassword
       }).then((response) => {
         var data = response.data;
-        if (data.isSuccess) {
-          this.$axios.post("http://localhost:8080/api/class/create", {//发送请求 跳转页面
+        var token = data.data;
+        if (data.success) {
+          this.$axios.post(serverUrl + "api/myClass/create?token="+ token, {//发送请求 跳转页面
             formJson: JSON.stringify(this.$attrs.originResource)
           }).then((response) => {
             var data = response.data;
-            if (data.isSuccess) {
+            if (data.success) {
               this.$alert('一段网址', '分享网址', {
                 confirmButtonText: '确定',
                 callback: action => {
-                  // location.href="https://www.baidu.com/";
+                  console.log(data);
+                  location.href = serverUrl + "login/tokenGo?page=busi/myClass/home&token=" + token;
                 }
               });
             } else {
-
+              this.$message(data.msg);
             }
             console.log(response.data)
           }).catch((response) => {
@@ -85,7 +95,7 @@
           });
           this.$emit('update:visible', false)
         }else{
-          
+          this.$message(data.msg);
         }
         console.log(response.data)
       }).catch((response) => {
