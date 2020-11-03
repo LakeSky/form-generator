@@ -5,13 +5,17 @@
         <el-form-item label="表单名称" :label-width="formLabelWidth">
           <el-input v-model="form.name" autocomplete="off"></el-input>
         </el-form-item>
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+          <el-tab-pane label="注册" name="register"></el-tab-pane>
+          <el-tab-pane label="登录" name="login"></el-tab-pane>
+        </el-tabs>
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="form.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
           <el-input v-model="form.password" show-password autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="重复密码" :label-width="formLabelWidth">
+        <el-form-item v-if="activeName=='register'" label="重复密码" :label-width="formLabelWidth">
           <el-input v-model="form.rePassword" show-password autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
@@ -31,6 +35,7 @@
   props: ['originFormData'],
   data() {
     return {
+      activeName: 'register',
       resources: null,
       formData: null,
       dialogTableVisible: false,
@@ -66,7 +71,11 @@
       //1.登录成功，并且要在后台建立账号和对应的类型。所有的数据。
       //2.数据要传给后台建立
       var serverUrl = "http://localhost:8080/";
-      this.$axios.post(serverUrl + "api/auth/register", {//发送请求 跳转页面
+      var api = "api/auth/register";
+      if (this.activeName === 'login') {
+        var api = "api/auth/login/back";
+      }
+      this.$axios.post(serverUrl + api, {//发送请求 跳转页面
         email: this.form.username,
         password: this.form.password,
         rePassword: this.form.rePassword
